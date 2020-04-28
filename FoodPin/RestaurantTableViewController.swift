@@ -28,11 +28,13 @@ class RestaurantTableViewController: UITableViewController {
         cell.locationLabel.text = restaurantLocations[indexPath.row]
         cell.typeLabel.text = restaurantTypes[indexPath.row]
         
-        if restaurantIsVisited[indexPath.row] {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
+//        if restaurantIsVisited[indexPath.row] {
+//            cell.accessoryType = .checkmark
+//        } else {
+//            cell.accessoryType = .none
+//        }
+        
+        cell.accessoryType = restaurantIsVisited[indexPath.row] ? .checkmark : .none // 三元運算子
         
         return cell
     }
@@ -59,6 +61,14 @@ class RestaurantTableViewController: UITableViewController {
             self.restaurantIsVisited[indexPath.row] = true
         })
         optionMenu.addAction(checkInAction)
+        
+        if let popoverController = optionMenu.popoverPresentationController {
+            if let cell = tableView.cellForRow(at: indexPath) {
+                popoverController.sourceView = cell
+                popoverController.sourceRect = cell.bounds
+            }
+            // 修正ipad因無法使用.actionsheet而閃退，改使用彈跳視窗
+        }
         
         present(optionMenu, animated: true, completion: nil) // 呈現菜單
         
