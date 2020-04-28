@@ -15,7 +15,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="datacell" rowHeight="82" id="ItB-hy-DZ8">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="datacell" rowHeight="82" id="ItB-hy-DZ8" customClass="RestaurantTableViewCell" customModule="FoodPin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="82"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ItB-hy-DZ8" id="ICY-jX-ecv">
@@ -65,6 +65,12 @@
                                         <constraint firstAttribute="trailingMargin" secondItem="Uo1-RK-aKk" secondAttribute="trailing" id="yxS-as-OC5"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="locationLabel" destination="Mw8-Wy-DwS" id="DU2-Id-vNX"/>
+                                    <outlet property="nameLabel" destination="JEG-Ep-j3F" id="mfS-Js-43G"/>
+                                    <outlet property="thumbnailImageView" destination="aAf-Gs-B7E" id="JTi-sv-PTy"/>
+                                    <outlet property="typeLabel" destination="1CB-Kb-6VL" id="W3J-3Y-mPc"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
