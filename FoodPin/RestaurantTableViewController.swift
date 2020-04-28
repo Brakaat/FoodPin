@@ -28,13 +28,10 @@ class RestaurantTableViewController: UITableViewController {
         cell.locationLabel.text = restaurantLocations[indexPath.row]
         cell.typeLabel.text = restaurantTypes[indexPath.row]
         
-//        if restaurantIsVisited[indexPath.row] {
-//            cell.accessoryType = .checkmark
-//        } else {
-//            cell.accessoryType = .none
-//        }
+
         
         cell.accessoryType = restaurantIsVisited[indexPath.row] ? .checkmark : .none // 三元運算子
+        // 更新示圖
         
         return cell
     }
@@ -54,13 +51,31 @@ class RestaurantTableViewController: UITableViewController {
         let callAction = UIAlertAction(title: "Call " + "0123 - 555 - \(indexPath.row)", style: .default, handler: callActionHandler)
         optionMenu.addAction(callAction)
         
+        
+        
         let checkInAction = UIAlertAction(title: "Check in", style: .default, handler: {
             (action:UIAlertAction!) -> Void in
             let cell = tableView.cellForRow(at: indexPath)
             cell?.accessoryType = .checkmark
             self.restaurantIsVisited[indexPath.row] = true
         })
-        optionMenu.addAction(checkInAction)
+        
+        
+        let checkUndoAction = UIAlertAction(title: "Check undo", style: .default, handler: {
+            (action:UIAlertAction!) -> Void in
+            let cell = tableView.cellForRow(at: indexPath)
+            cell?.accessoryType = .none
+            self.restaurantIsVisited[indexPath.row] = false
+        })
+        
+        let cellchack = tableView.cellForRow(at: indexPath)
+        if cellchack?.accessoryType == .checkmark{
+            optionMenu.addAction(checkUndoAction)
+        } else {
+            optionMenu.addAction(checkInAction)
+        }
+        
+        // 添加取消訂購的選單
         
         if let popoverController = optionMenu.popoverPresentationController {
             if let cell = tableView.cellForRow(at: indexPath) {
@@ -74,8 +89,6 @@ class RestaurantTableViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: false) // 取消反選
         
-        
-        
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -88,5 +101,4 @@ class RestaurantTableViewController: UITableViewController {
         return restaurantNames.count
     }
 
-   
 }
