@@ -16,6 +16,8 @@ class RestaurantTableViewController: UITableViewController {
 
     var restaurantTypes = ["Coffee & Tea Shop", "Cafe", "Tea House", "Austrian / Causual Drink", "French", "Bakery", "Bakery", "Chocolate", "Cafe", "American / Seafood", "American", "American", "Breakfast & Brunch", "Coffee & Tea", "Coffee & Tea", "Latin American", "Spanish", "Spanish", "Spanish", "British", "Thai"]
     
+    var restaurantImages = ["cafedeadend", "homei", "teakha", "cafeloisl", "petiteoyster", "forkeerestaurant", "posatelier", "bourkestreetbakery", "haighschocolate", "palominoespresso", "upstate", "traif", "grahamavenuemeats", "wafflewolf", "fiveleaves", "cafelore", "confessional", "barrafina", "donostia", "royaloak", "caskpubkitchen"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -24,7 +26,7 @@ class RestaurantTableViewController: UITableViewController {
         let cellIdentifier = "datacell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! RestaurantTableViewCell
         cell.nameLabel.text = restaurantNames[indexPath.row]
-        cell.thumbnailImageView.image = UIImage(named: restaurantNames[indexPath.row])
+        cell.thumbnailImageView.image = UIImage(named: restaurantImages[indexPath.row])
         cell.locationLabel.text = restaurantLocations[indexPath.row]
         cell.typeLabel.text = restaurantTypes[indexPath.row]
         
@@ -100,5 +102,21 @@ class RestaurantTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of rows
         return restaurantNames.count
     }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            restaurantNames.remove(at: indexPath.row)
+            restaurantTypes.remove(at: indexPath.row)
+            restaurantLocations.remove(at: indexPath.row)
+            restaurantIsVisited.remove(at: indexPath.row)
+            restaurantImages.remove(at: indexPath.row)
+        }
+        tableView.reloadData() //更新tableview
+//        print("Total item: \(restaurantNames.count)")
+//        for name in restaurantNames {
+//            print(name)
+//        }
+    }
+    
 
 }
