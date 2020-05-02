@@ -126,6 +126,14 @@ class RestaurantTableViewController: UITableViewController {
             } else {
                 activityController = UIActivityViewController(activityItems: [defaultText], applicationActivities: nil)
             }
+            
+            if let popoverController = activityController.popoverPresentationController {
+                if let cell = tableView.cellForRow(at: indexPath) {
+                    popoverController.sourceView = cell
+                    popoverController.sourceRect = cell.bounds
+                }
+            }
+            //修正ipad會crash
 
             self.present(activityController, animated: true, completion: nil)
             completionHandler(true)
@@ -139,12 +147,33 @@ class RestaurantTableViewController: UITableViewController {
         shareAction.image = UIImage(named: "share")
         //添加delete share按鈕顏色
 
+        
+        
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
         //向左滑時，建立上面的兩個按鈕 delete share
         return swipeConfiguration
         
         
         }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let pinAction = UIContextualAction(style: .destructive, title: "Pin") { (action, sourceView, completionHandler) in
+            
+            let cell = tableView.cellForRow(at: indexPath) as! RestaurantTableViewCell
+            self.restaurantIsVisited[indexPath.row] = (self.restaurantIsVisited[indexPath.row]) ? false : true
+            cell.accessoryType = self.restaurantIsVisited[indexPath.row] ? .checkmark : .none
+            
+            completionHandler(true)
+        }
+        
+        let pinIcon = restaurantIsVisited[indexPath.row] ? "arrow.uturn.left" : "checkmark"
+        pinAction.backgroundColor = UIColor(red: 36.0/255.0, green: 219.0/255.0, blue: 33.0/255.0, alpha: 1.0)
+        pinAction.image = UIImage(systemName: pinIcon)
+        
+        let swipeConfiguration = UISwipeActionsConfiguration(actions: [pinAction])
+        return swipeConfiguration
+    }
+    
     }
     
 
