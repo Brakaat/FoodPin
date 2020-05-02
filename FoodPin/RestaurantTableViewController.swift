@@ -20,6 +20,7 @@ class RestaurantTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -40,58 +41,58 @@ class RestaurantTableViewController: UITableViewController {
     
     var restaurantIsVisited = Array(repeating: false, count: 21)
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let optionMenu = UIAlertController(title: nil, message: "What do you want to do?", preferredStyle: .actionSheet)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        optionMenu.addAction(cancelAction) // 添加動作至菜單
-        
-        let callActionHandler = { (action:UIAlertAction!) -> Void in
-            let alertMessage = UIAlertController(title: "Unavailable", message: "We will soon to make it update", preferredStyle: .alert)
-            alertMessage.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alertMessage, animated: true, completion: nil)
-        }
-        let callAction = UIAlertAction(title: "Call " + "0123 - 555 - \(indexPath.row)", style: .default, handler: callActionHandler)
-        optionMenu.addAction(callAction)
-        
-        
-        
-        let checkInAction = UIAlertAction(title: "Check in", style: .default, handler: {
-            (action:UIAlertAction!) -> Void in
-            let cell = tableView.cellForRow(at: indexPath)
-            cell?.accessoryType = .checkmark
-            self.restaurantIsVisited[indexPath.row] = true
-        })
-        
-        
-        let checkUndoAction = UIAlertAction(title: "Check undo", style: .default, handler: {
-            (action:UIAlertAction!) -> Void in
-            let cell = tableView.cellForRow(at: indexPath)
-            cell?.accessoryType = .none
-            self.restaurantIsVisited[indexPath.row] = false
-        })
-        
-        let cellchack = tableView.cellForRow(at: indexPath)
-        if cellchack?.accessoryType == .checkmark{
-            optionMenu.addAction(checkUndoAction)
-        } else {
-            optionMenu.addAction(checkInAction)
-        }
-        
-        // 添加取消訂購的選單
-        
-        if let popoverController = optionMenu.popoverPresentationController {
-            if let cell = tableView.cellForRow(at: indexPath) {
-                popoverController.sourceView = cell
-                popoverController.sourceRect = cell.bounds
-            }
-            // 修正ipad因無法使用.actionsheet而閃退，改使用彈跳視窗
-        }
-        
-        present(optionMenu, animated: true, completion: nil) // 呈現菜單
-        
-        tableView.deselectRow(at: indexPath, animated: false) // 取消反選
-        
-    }
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let optionMenu = UIAlertController(title: nil, message: "What do you want to do?", preferredStyle: .actionSheet)
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+//        optionMenu.addAction(cancelAction) // 添加動作至菜單
+//
+//        let callActionHandler = { (action:UIAlertAction!) -> Void in
+//            let alertMessage = UIAlertController(title: "Unavailable", message: "We will soon to make it update", preferredStyle: .alert)
+//            alertMessage.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//            self.present(alertMessage, animated: true, completion: nil)
+//        }
+//        let callAction = UIAlertAction(title: "Call " + "0123 - 555 - \(indexPath.row)", style: .default, handler: callActionHandler)
+//        optionMenu.addAction(callAction)
+//
+//
+//
+//        let checkInAction = UIAlertAction(title: "Check in", style: .default, handler: {
+//            (action:UIAlertAction!) -> Void in
+//            let cell = tableView.cellForRow(at: indexPath)
+//            cell?.accessoryType = .checkmark
+//            self.restaurantIsVisited[indexPath.row] = true
+//        })
+//
+//
+//        let checkUndoAction = UIAlertAction(title: "Check undo", style: .default, handler: {
+//            (action:UIAlertAction!) -> Void in
+//            let cell = tableView.cellForRow(at: indexPath)
+//            cell?.accessoryType = .none
+//            self.restaurantIsVisited[indexPath.row] = false
+//        })
+//
+//        let cellchack = tableView.cellForRow(at: indexPath)
+//        if cellchack?.accessoryType == .checkmark{
+//            optionMenu.addAction(checkUndoAction)
+//        } else {
+//            optionMenu.addAction(checkInAction)
+//        }
+//
+//        // 添加取消訂購的選單
+//
+//        if let popoverController = optionMenu.popoverPresentationController {
+//            if let cell = tableView.cellForRow(at: indexPath) {
+//                popoverController.sourceView = cell
+//                popoverController.sourceRect = cell.bounds
+//            }
+//            // 修正ipad因無法使用.actionsheet而閃退，改使用彈跳視窗
+//        }
+//
+//        present(optionMenu, animated: true, completion: nil) // 呈現菜單
+//
+//        tableView.deselectRow(at: indexPath, animated: false) // 取消反選
+//
+//    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -172,6 +173,19 @@ class RestaurantTableViewController: UITableViewController {
         
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [pinAction])
         return swipeConfiguration
+    }
+    
+// MARK: - 轉換
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showRestaurantDetail" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let destinationController = segue.destination as! RestaurantDetailViewController
+                destinationController.restaurantImageName = restaurantImages[indexPath.row]
+                destinationController.restaurantName = restaurantNames[indexPath.row]
+                destinationController.restaurantLocation = restaurantLocations[indexPath.row]
+                destinationController.restaurantType = restaurantTypes[indexPath.row]
+            }
+        }
     }
     
     }
