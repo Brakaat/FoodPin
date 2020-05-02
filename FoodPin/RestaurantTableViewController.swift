@@ -103,24 +103,8 @@ class RestaurantTableViewController: UITableViewController {
         return restaurantNames.count
     }
     
-//    //ver11
-//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            restaurantNames.remove(at: indexPath.row)
-//            restaurantTypes.remove(at: indexPath.row)
-//            restaurantLocations.remove(at: indexPath.row)
-//            restaurantIsVisited.remove(at: indexPath.row)
-//            restaurantImages.remove(at: indexPath.row)
-//        }
-////        tableView.reloadData() //更新tableview
-//        tableView.deleteRows(at: [indexPath], with: .fade)  //使用deletrows 添入動畫
-//
-//
-//
-//    }
-    
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "delete") {(action, sourceView, completionHandler) in
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {(action, sourceView, completionHandler) in
             self.restaurantNames.remove(at: indexPath.row)
             self.restaurantLocations.remove(at: indexPath.row)
             self.restaurantTypes.remove(at: indexPath.row)
@@ -131,18 +115,35 @@ class RestaurantTableViewController: UITableViewController {
 
             completionHandler(true)
         }
+
         let shareAction = UIContextualAction(style: .normal, title: "Share") { (action, sourceView, completionHandler) in
-                let defaultText = "Just checking in at " + self.restaurantNames[indexPath.row]
-                let activityController = UIActivityViewController(activityItems: [defaultText], applicationActivities: nil)
-
-                self.present(activityController, animated: true, completion: nil)
-                completionHandler(true)
-
+            let defaultText = "Just checking in at " + self.restaurantNames[indexPath.row]
+            //添加複製貼上時，會連同名稱及圖片一起
+            let activityController : UIActivityViewController
+            
+            if let imageToShare = UIImage(named: self.restaurantImages[indexPath.row]) {
+                activityController = UIActivityViewController(activityItems: [defaultText, imageToShare], applicationActivities: nil)
+            } else {
+                activityController = UIActivityViewController(activityItems: [defaultText], applicationActivities: nil)
             }
 
-            let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
-            //向左滑時，建立上面的兩個按鈕 delete share
-            return swipeConfiguration
+            self.present(activityController, animated: true, completion: nil)
+            completionHandler(true)
+
+            }
+        
+        deleteAction.backgroundColor = UIColor(red: 231.0/255.0, green: 76.0/255.0, blue: 60.0/255.0, alpha: 1.0)
+        deleteAction.image = UIImage(named: "delete")
+
+        shareAction.backgroundColor = UIColor(red: 254.0/255.0, green: 149.0/255.0, blue: 38.0/255.0, alpha: 1.0)
+        shareAction.image = UIImage(named: "share")
+        //添加delete share按鈕顏色
+
+        let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
+        //向左滑時，建立上面的兩個按鈕 delete share
+        return swipeConfiguration
+        
+        
         }
     }
     
