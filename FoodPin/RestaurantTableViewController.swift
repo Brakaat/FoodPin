@@ -103,20 +103,48 @@ class RestaurantTableViewController: UITableViewController {
         return restaurantNames.count
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            restaurantNames.remove(at: indexPath.row)
-            restaurantTypes.remove(at: indexPath.row)
-            restaurantLocations.remove(at: indexPath.row)
-            restaurantIsVisited.remove(at: indexPath.row)
-            restaurantImages.remove(at: indexPath.row)
-        }
-        tableView.reloadData() //更新tableview
-//        print("Total item: \(restaurantNames.count)")
-//        for name in restaurantNames {
-//            print(name)
+//    //ver11
+//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if editingStyle == .delete {
+//            restaurantNames.remove(at: indexPath.row)
+//            restaurantTypes.remove(at: indexPath.row)
+//            restaurantLocations.remove(at: indexPath.row)
+//            restaurantIsVisited.remove(at: indexPath.row)
+//            restaurantImages.remove(at: indexPath.row)
 //        }
+////        tableView.reloadData() //更新tableview
+//        tableView.deleteRows(at: [indexPath], with: .fade)  //使用deletrows 添入動畫
+//
+//
+//
+//    }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "delete") {(action, sourceView, completionHandler) in
+            self.restaurantNames.remove(at: indexPath.row)
+            self.restaurantLocations.remove(at: indexPath.row)
+            self.restaurantTypes.remove(at: indexPath.row)
+            self.restaurantIsVisited.remove(at: indexPath.row)
+            self.restaurantImages.remove(at: indexPath.row)
+
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
+
+            completionHandler(true)
+        }
+        let shareAction = UIContextualAction(style: .normal, title: "Share") { (action, sourceView, completionHandler) in
+                let defaultText = "Just checking in at " + self.restaurantNames[indexPath.row]
+                let activityController = UIActivityViewController(activityItems: [defaultText], applicationActivities: nil)
+
+                self.present(activityController, animated: true, completion: nil)
+                completionHandler(true)
+
+            }
+
+            let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
+            //向左滑時，建立上面的兩個按鈕 delete share
+            return swipeConfiguration
+        }
     }
     
 
-}
+
